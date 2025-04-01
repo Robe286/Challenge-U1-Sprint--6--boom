@@ -14,33 +14,44 @@ const body = document.getElementsByTagName('body')[0]
 const result = document.getElementById('result');
 //console.log(initGameDos)
 
-// Función recogida de la elección del usuario del input:
+
 // Inicio con click
 
 let bombaGame;
 body.addEventListener('click', () => {
     bombaGame = userInput.value;
-    console.log(bombaGame)
+    if(bombaGame > 0) {
+        numRandom();
+        console.log(numRandom())
+    }
+    
+})
 
-})// aqui inicia todo
-
-//Inicio con 
+//Inicio con Enter o NumpadEnter:
 
 userInput.addEventListener('keypress', (key) => {
     if((key.code == 'Enter')||(key.code == 'NumpadEnter')) {
-
-
+        numRandom();
     }
 }) // Todo aqui hasta imprimir en pantalla
 
 
 
-//Promesa para generar número aleatorio, (metida finalmente en función?):
+//Función con promesa para generar número aleatorio:
 
-const randomNumPromise = new Promise((resolve) => {
-    randomNum = getRandomNum(1, 3);
-    resolve(randomNum)
-})
+function numRandom () {
+    const randomNumPromise = new Promise((resolve) =>{
+        setTimeout(() =>{
+            randomNum = getRandomNum(1, 3);
+            resolve(randomNum)
+            console.log(randomNum)
+        }, 1000)
+    })
+    randomNumPromise
+    .then((num) => {
+        console.log('Este es el número aleatorio', num);
+    })
+}
 
 
 
@@ -81,28 +92,4 @@ function getRandomNum(min, max) {
     return Math.floor(Math.random() * max + min);
 }
 
-randomNumPromise
-.then((elemento) => {
-    console.log('Este es el número aleatorio', elemento);
-    return countDownPromise;
-})
-.then((elemento) => {
-    console.log('Esta es la cuenta atrás', elemento);
-    return comparisonPromise;
-})
-.then((elemento) => {
-    console.log('Este es el resultado de la comparación', elemento);
-})
 
-
-
-/*
-function numrandom () {
-    const randomNumPromise = new Promise((resolve) =>{
-        setTimeout(() =>{
-            randomNum = getRandomNum(1, 3);
-            resolve(randomNum)
-        })
-    })
-}
-*/
