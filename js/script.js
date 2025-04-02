@@ -5,91 +5,69 @@
 // id="result" para imprimir los resultados
 
 
-let randomNum;
 let counter = 6;
+let userNumber = 0
 
 const userInput = document.getElementById('userInput');
 const countdown = document.getElementById('countdown');
-const body = document.getElementsByTagName('body')[0]
 const result = document.getElementById('result');
-//console.log(initGameDos)
+const restart = document.getElementById('restart');
 
+//Funcion para generar número aleatorio. Usar arrowFunction para poder meterla en una variable,
+// si se usa function normal hay que posicionarla al final del script, si no interfiere con la lectura del programa.
+// La llamaremos donde la necesitemos llamar.
+
+const getRandomNum = (min, max) => Math.floor(Math.random() * max + min)
 
 // Inicio con click
 
-let bombaGame;
-body.addEventListener('click', () => {
-    bombaGame = userInput.value;
-    if(bombaGame > 0) {
-        numRandom();
-        console.log(numRandom())
-    }
-    
+userInput.addEventListener('change', () => {
+    userNumber = userInput.value;
 })
 
-//Inicio con Enter o NumpadEnter:
+//Función para comenzar el juego:
 
-userInput.addEventListener('keypress', (key) => {
-    if((key.code == 'Enter')||(key.code == 'NumpadEnter')) {
-        numRandom();
-    }
-}) // Todo aqui hasta imprimir en pantalla
-
-
-
-//Función con promesa para generar número aleatorio:
-
-function numRandom () {
+function startGame () {
+    count()
     const randomNumPromise = new Promise((resolve) =>{
         setTimeout(() =>{
-            randomNum = getRandomNum(1, 3);
-            resolve(randomNum)
-            console.log(randomNum)
-        }, 1000)
+            resolve(getRandomNum(1, 3))
+        }, 6000)
     })
-    randomNumPromise
-    .then((num) => {
-        console.log('Este es el número aleatorio', num);
-    })
+    return randomNumPromise // Retorna la promesa para despúes sacarla continuando con .then()
 }
 
+startGame().then(number => {
+    let mensaje = ''
+    if(number == userNumber) {
+        mensaje = `¡Has salvado el mundo!. El número seleccionado es ${userNumber} y el número aleatorio es ${number}`
+    } else {
+        mensaje = `¡Has destruido el mundo!. El número seleccionado es ${userNumber} y el número aleatorio es ${number}`
+    }
+    result.innerHTML = `<p>${mensaje}</p>`
+})
 
+// Función cuenta atras:
 
-// Promesa para empezar cuenta atrás:
-
-const countDownPromise = new Promise ((resolve) => {
+function count () {
     let id = setInterval(() => { 
         if(counter == 0) {
             clearInterval(id);
         }
-        else {
+         else {
             counter = counter - 1; 
             countdown.innerHTML = counter; 
         }
-        resolve(id)
     }, 1000);
-});
+}
 
-// Promesa para comparar elección user con elección aleatoria:
+//Funcion reiniciar juego:
 
-const comparisonPromise = new Promise ((resolve) => {
-    let resultComparison = () => {
-        if(randomNum == bombaGame) {
-            result.innerHTML = '<p>¡Has salvado el mundo!</p>'
-        }
-        else {
-            result.innerHTML = '<p>La Bomba ha estallado</p>'
-        }
-        resolve(resultComparison);
-        console.log(resultComparison)
-    }
+restart.addEventListener('click', () => {  // Evento de escucha al clickar en boton reiniciar juego
+    location.reload()  // Al clickar volverá a cargar la página. ¿Cómo puedo ver donde está ese location? A que hay que hacerle un console.log?
 })
 
-    
-//Funcion para generar número aleatorio
 
-function getRandomNum(min, max) {
-    return Math.floor(Math.random() * max + min);
-}
+    
 
 
